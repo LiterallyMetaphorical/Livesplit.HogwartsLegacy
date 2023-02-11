@@ -13,10 +13,16 @@ On Quest: The Path to Hogwarts // 7209039
 On Quest: Welcome to Hogwarts  // 7209039
 */
 
-state("HogwartsLegacy", "Steam v1.0")
+state("HogwartsLegacy", "Steam v0.9")
 {
     bool loading    : 0x90B2AA0;
     string250 quest : 0x08F057C8, 0x140, 0x0;
+}
+
+state("HogwartsLegacy", "Steam v1.0")
+{
+    bool loading    : 0x90B5AA0;
+    string250 quest : 0x08F087C8, 0x140, 0x0;
 }
 
 init
@@ -24,6 +30,9 @@ init
 switch (modules.First().ModuleMemorySize) 
     {
         case 428994560: 
+            version = "Steam v0.9";
+            break;
+        case 473239552: 
             version = "Steam v1.0";
             break;
     default:
@@ -60,10 +69,7 @@ onStart
 
 start
 {
-    return 
-        (
-            old.quest.Contains("Menus") && current.quest.Contains("Path to Hogwarts")
-        );
+    return old.quest.Contains("Menus") && current.quest.Contains("Path to Hogwarts");
 }
 
 split
@@ -94,23 +100,23 @@ split
     current.quest.Contains("Professor Hecat's Assignment 1")&& old.quest.Contains("Crossed Wands - Round 1") ||
     current.quest.Contains("Professor Hecat's Assignment 1")&& old.quest.Contains("Crossed Wands - Round 2") || 
 
-    current.quest.Contains("Hogwarts")            && old.quest.Contains("Spell Combination Practice 1")      || // moves split from Crossed Wands Round 2 - Spell Combination Practice 1
-    current.quest.Contains("Hogwarts")            && old.quest.Contains("Professor Hecat's Assignment 1")    || // moves split from Spell Combination Practice 1 - Professor Hecat's Assignment 1
-    current.quest.Contains("Hogwarts")            && old.quest.Contains("Secrets of the Restricted Section") || // moves split from Professor Hecat's Assignment 1 - Secrets of the Restricted Section
-    current.quest.Contains("Hogwarts")            && old.quest.Contains("Tomes and Tribulations")            || // moves split from Secrets of the Restricted Section - Tomes and Tribulations
-    current.quest.Contains("Hogwarts")            && old.quest.Contains("Herbology Class")                   || // moves split from Tomes and Tribulations - Herbology Class
-    current.quest.Contains("Hogwarts")            && old.quest.Contains("Potions Class")                     || // moves split from Herbology Class - Potions Class
-    current.quest.Contains("Trials of Merlin")    && old.quest.Contains("The Girl from Uagadou")             || // moves split from Potions Class - The Girl from Uagadou
-    current.quest.Contains("Highlands")           && old.quest.Contains("Trials of Merlin")                  || // moves split from The Girl from Uagadou - Trials of Merlin
-    current.quest.Contains("Hogwarts")           && old.quest.Contains("The Missing Pages")                  || // moves split from The Girl from Uagadou - Trials of Merlin   
-    current.quest.Contains("Hogwarts") && old.quest.Contains("Professor Hecat's Assignment 2")  || // moves split from HOUSE SPECIFIC QUEST #1 - Professor Hecat's Assignment 2
-    current.quest.Contains("Hogwarts") && old.quest.Contains("Jackdaw's Rest")                  || // moves split from Professor Hecat's Assignment 2 - Jackdaw's Rest
+    current.quest.Contains("Hogwarts")         && old.quest.Contains("Spell Combination Practice 1")      || // moves split from Crossed Wands Round 2 - Spell Combination Practice 1
+    current.quest.Contains("Hogwarts")         && old.quest.Contains("Professor Hecat's Assignment 1")    || // moves split from Spell Combination Practice 1 - Professor Hecat's Assignment 1
+    current.quest.Contains("Hogwarts")         && old.quest.Contains("Secrets of the Restricted Section") || // moves split from Professor Hecat's Assignment 1 - Secrets of the Restricted Section
+    current.quest.Contains("Hogwarts")         && old.quest.Contains("Tomes and Tribulations")            || // moves split from Secrets of the Restricted Section - Tomes and Tribulations
+    current.quest.Contains("Hogwarts")         && old.quest.Contains("Herbology Class")                   || // moves split from Tomes and Tribulations - Herbology Class
+    current.quest.Contains("Hogwarts")         && old.quest.Contains("Potions Class")                     || // moves split from Herbology Class - Potions Class
+    current.quest.Contains("Trials of Merlin") && old.quest.Contains("The Girl from Uagadou")             || // moves split from Potions Class - The Girl from Uagadou
+    current.quest.Contains("Highlands")        && old.quest.Contains("Trials of Merlin")                  || // moves split from The Girl from Uagadou - Trials of Merlin
+    current.quest.Contains("Highlands")        && old.quest.Contains("The Missing Pages")                 || // moves split from The Girl from Uagadou - Trials of Merlin   
+    current.quest.Contains("Hogwarts")         && old.quest.Contains("Professor Hecat's Assignment 2")    || // moves split from HOUSE SPECIFIC QUEST #1 - Professor Hecat's Assignment 2
+    current.quest.Contains("Hogwarts")         && old.quest.Contains("Jackdaw's Rest")                    || // moves split from Professor Hecat's Assignment 2 - Jackdaw's Rest
     current.quest.Contains("Hogwarts") && old.quest.Contains("Flying Class")                    || // moves split from Jackdaw's Rest - Flying Class
     current.quest.Contains("Hogwarts") && old.quest.Contains("In the Shadow of the Undercroft") || // moves split from Flying Class - In the Shadow of the Undercroft
-    current.quest.Contains("Hogwarts") && old.quest.Contains("The Room of Requirement")         || // moves split from In the Shadow of the Undercroft - The Room of Requirement
+    current.quest.Contains("Interior Decorating") && old.quest.Contains("The Room of Requirement")        || // moves split from In the Shadow of the Undercroft - The Room of Requirement
     current.quest.Contains("Hogwarts") && old.quest.Contains("The Map Chamber")                 || // moves split from The Room of Requirement - The Map Chamber
     current.quest.Contains("Hogwarts") && old.quest.Contains("Percival Rackham’s Trial")        || // moves split from The Room of Requirement - The Map Chamber
-    current.quest.Contains("Hogwarts") && old.quest.Contains("Beasts Class")        || // moves split from The Map Chamber - Percival Rackham’s Trial
+    current.quest.Contains("Highlands") && old.quest.Contains("Beasts Class")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("The Caretaker’s Lunar Lament")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("The Helm of Urtkot")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("In the Shadow of the Estate")        || // moves split from The Map Chamber - Percival Rackham’s Trial
