@@ -80,12 +80,12 @@ split
     
     //These two cover for either choice at the end of "Welcome to Hogwarts"
     current.quest.Contains("Charms")                        && old.quest.Contains("Welcome to Hogwarts")     || // moves split from The Path to Hogwarts - Welcome to Hogwarts
-    current.quest.Contains("Defense Against the Dark Arts") && old.quest.Contains("Welcome to Hogwarts")     || // moves split from The Path to Hogwarts - Welcome to Hogwarts
+    current.quest.Contains("Defence Against the Dark Arts") && old.quest.Contains("Welcome to Hogwarts")     || // moves split from The Path to Hogwarts - Welcome to Hogwarts
 
     //These 4 cover both decisions at the end of either quest (DATDA and Charms)
-    current.quest.Contains("Charms")                        && old.quest.Contains("Defense Against the Dark Arts") || // moves split from Welcome to Hogwarts - Defense Against the Dark Arts
-    current.quest.Contains("Defense Against the Dark Arts") && old.quest.Contains("Charms")                        || // moves split from Defense Against the Dark Arts - Charms
-    current.quest.Contains("Hogwarts")                      && old.quest.Contains("Defense Against the Dark Arts") || // moves split from Welcome to Hogwarts - Defense Against the Dark Arts
+    current.quest.Contains("Charms")                        && old.quest.Contains("Defence Against the Dark Arts") || // moves split from Welcome to Hogwarts - Defense Against the Dark Arts
+    current.quest.Contains("Defence Against the Dark Arts") && old.quest.Contains("Charms")                        || // moves split from Defense Against the Dark Arts - Charms
+    current.quest.Contains("Hogwarts")                      && old.quest.Contains("Defence Against the Dark Arts") || // moves split from Welcome to Hogwarts - Defense Against the Dark Arts
     current.quest.Contains("Hogwarts")                      && old.quest.Contains("Charms")                        || // moves split from Defense Against the Dark Arts - Charms
 
     //Covers you if you don't do WAC Skip
@@ -118,10 +118,11 @@ split
     current.quest.Contains("Hogwarts") && old.quest.Contains("Percival Rackham’s Trial")        || // moves split from The Room of Requirement - The Map Chamber
     current.quest.Contains("Highlands") && old.quest.Contains("Beasts Class")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("The Caretaker’s Lunar Lament")        || // moves split from The Map Chamber - Percival Rackham’s Trial
-    current.quest.Contains("Hogwarts") && old.quest.Contains("The Helm of Urtkot")        || // moves split from The Map Chamber - Percival Rackham’s Trial
-    current.quest.Contains("Hogwarts") && old.quest.Contains("In the Shadow of the Estate")        || // moves split from The Map Chamber - Percival Rackham’s Trial
-    current.quest.Contains("Hogwarts") && old.quest.Contains("The Elf, The Nab-Sack, and the Loom")        || // moves split from The Map Chamber - Percival Rackham’s Trial
-    current.quest.Contains("Hogwarts") && old.quest.Contains("Astronomy Class")        || // moves split from The Map Chamber - Percival Rackham’s Trial
+    current.quest.Contains("Hogwarts") && old.quest.Contains("Professor Sharp's Assignment 1")        || // moves split from The Map Chamber - Percival Rackham’s Trial
+    current.quest.Contains("Highlands") && old.quest.Contains("The Helm of Urtkot")        || // moves split from The Map Chamber - Percival Rackham’s Trial
+    current.quest.Contains("Highlands") && old.quest.Contains("In the Shadow of the Estate")        || // moves split from The Map Chamber - Percival Rackham’s Trial
+    current.quest.Contains("Room of Requirement") && old.quest.Contains("The Elf, The Nab-Sack, and the Loom")        || // moves split from The Map Chamber - Percival Rackham’s Trial
+    current.quest.Contains("Highlands") && old.quest.Contains("Astronomy Class")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("Professor Garlick’s Assignment 1")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("The High Keep")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("Back on the Path")        || // moves split from The Map Chamber - Percival Rackham’s Trial
