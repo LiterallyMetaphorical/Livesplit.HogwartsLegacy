@@ -2,7 +2,7 @@
 Scanning Best Practices:
 
 bool loading
-just a boolean, set "Memory Scan Options" to Dead Space.exe - 1 on loading screen, 0 everywhere else
+just a boolean, set "Memory Scan Options" to HogwartsLegacy.exe - 1 on loading screen, 0 everywhere else
 
 string quest
 UTF String
@@ -25,6 +25,12 @@ state("HogwartsLegacy", "Steam v1.0")
     string250 quest : 0x08F087C8, 0x140, 0x0;
 }
 
+state("HogwartsLegacy", "Steam v1.1")
+{
+    bool loading    : 0x90B5B20;
+    string250 quest : 0x08F08838, 0x140, 0x0;
+}
+
 init
 {
 switch (modules.First().ModuleMemorySize) 
@@ -35,7 +41,10 @@ switch (modules.First().ModuleMemorySize)
         case 473239552: 
             version = "Steam v1.0";
             break;
-    default:
+        case 464896000: 
+            version = "Steam v1.1";
+            break;
+        default:
         print("Unknown version detected");
         return false;
     }
