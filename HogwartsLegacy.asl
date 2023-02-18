@@ -31,6 +31,12 @@ state("HogwartsLegacy", "Steam v1.1")
     string250 quest : 0x08F08838, 0x140, 0x0;
 }
 
+state("HogwartsLegacy", "Steam v1.2")
+{
+    bool loading    : 0x9095DE0;
+    string250 quest : 0x08EE9728, 0x140, 0x0;
+}
+
 init
 {
 switch (modules.First().ModuleMemorySize) 
@@ -43,6 +49,9 @@ switch (modules.First().ModuleMemorySize)
             break;
         case 464896000: 
             version = "Steam v1.1";
+            break;
+        case 474820608: 
+            version = "Steam v1.2";
             break;
         default:
         print("Unknown version detected");
@@ -133,7 +142,7 @@ split
     current.quest.Contains("Room of Requirement") && old.quest.Contains("The Elf, The Nab-Sack, and the Loom")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Highlands") && old.quest.Contains("Astronomy Class")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("Professor Garlick’s Assignment 1")        || // moves split from The Map Chamber - Percival Rackham’s Trial
-    current.quest.Contains("Hogwarts") && old.quest.Contains("The High Keep")        || // moves split from The Map Chamber - Percival Rackham’s Trial
+    current.quest.Contains("Highlands") && old.quest.Contains("The High Keep")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("Back on the Path")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("Fire and Vice")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("Professor Weasley’s Assignment")        || // moves split from The Map Chamber - Percival Rackham’s Trial
