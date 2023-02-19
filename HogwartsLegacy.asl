@@ -34,6 +34,7 @@ state("HogwartsLegacy", "Steam v1.1")
 state("HogwartsLegacy", "Steam v1.2")
 {
     bool loading    : 0x9095DE0;
+    int  doorload   : 0x8EA7AB8;
     string250 quest : 0x08EE9728, 0x140, 0x0;
 }
 
@@ -87,7 +88,10 @@ onStart
 
 start
 {
-    return old.quest.Contains("Menus") && current.quest.Contains("Path to Hogwarts");
+    //New game autostart
+    return old.quest.Contains("Menus") && current.quest.Contains("Path to Hogwarts") ||
+    //No Intro autostart
+    old.quest.Contains("Menus") && current.quest.Contains("Welcome to Hogwarts");
 }
 
 split
@@ -144,6 +148,7 @@ split
     current.quest.Contains("Hogwarts") && old.quest.Contains("Professor Garlick’s Assignment 1")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Highlands") && old.quest.Contains("The High Keep")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("Back on the Path")        || // moves split from The Map Chamber - Percival Rackham’s Trial
+    current.quest.Contains("Hogwarts") && old.quest.Contains("Charles Rookwood's Trial")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("Fire and Vice")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("Professor Weasley’s Assignment")        || // moves split from The Map Chamber - Percival Rackham’s Trial
     current.quest.Contains("Hogwarts") && old.quest.Contains("In the Shadow of the Mine")        || // moves split from The Map Chamber - Percival Rackham’s Trial
