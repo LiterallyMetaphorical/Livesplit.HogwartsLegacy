@@ -120,7 +120,7 @@ update
 
 isLoading
 {
-    return current.loading;
+    return current.loading || current.quest == "In the Menus";
 }
 
 exit
