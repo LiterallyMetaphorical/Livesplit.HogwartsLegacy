@@ -27,6 +27,9 @@ state("HogwartsLegacy", "Steam v1.3")
 	string38 Event			: 0x8EAAD20, 0x4E8, 0x0;
 	string250 Checkpoint	: 0x8ED2470, 0x628, 0x1C0, 0x0;
 	string50 LatestQuest	: 0x8ED2470, 0xC0, 0x5E0, 0x268, 0x38, 0x0;
+    int broomRingsCount     : 0x08ED2470, 0xC0, 0x20, 0x20, 0x488, 0x428, 0x34C;
+    float broomIGT          : 0x08ED2470, 0xC0, 0x20, 0x20, 0x488, 0x428, 0x378;
+    float arenaIGT          : 0x0926EE70, 0x50, 0xA0, 0x40, 0xB8, 0x398, 0x2EC;
 }
 
 startup
@@ -35,6 +38,9 @@ startup
 	
 	//settings.Add("LRT", false, "Load Remover (Official)");
 	//settings.Add("Door", false, "Load Remover With Door Loads Removed (Test)");
+
+    settings.Add("Arena IGT", false, "Use Arena In-Game Time for primary timer. SELECT ONLY ONE.");
+    settings.Add("Broom Trial IGT", false, "Use Broom Trial In-Game Time for primary timer. SELECT ONLY ONE.");
 	
 	settings.Add("MQuests", false, "Main Quest Splits");
 	settings.CurrentDefaultParent = "MQuests";
@@ -201,7 +207,21 @@ start
 {
     //New game autostart
     //return old.quest == "In the Menus" && current.quest == "On Quest: The Path to Hogwarts" || old.quest == "In the Menus" && current.quest == "On Quest: Welcome to Hogwarts";
-	return current.Event == "Intro_AvatarCreator" && old.Event == "RootLevel" || current.CurrentQuest == "WEK_01" && old.CurrentQuest == "None";
+    if (current.Event == "Intro_AvatarCreator" && old.Event == "RootLevel" || current.CurrentQuest == "WEK_01" && old.CurrentQuest == "None")
+    {
+            return true;
+    }
+
+    // minigames autostart
+     if (settings["Arena IGT"] && old.arenaIGT == 0 && current.arenaIGT > 0)
+    {
+            return true;
+    }
+
+     if (settings["Broom Trial IGT"] && old.broomIGT == 1 && current.broomIGT > 1 || old.broomRingsCount != 0 && current.broomRingsCount == 0)
+    {
+            return true;
+    }
 }
 
 update
@@ -227,6 +247,18 @@ split
 			vars.completedSplits.Add(current.LatestQuest);
 			return true;
 		}
+
+    //minigames autosplitting
+    if (settings["Arena IGT"] && old.arenaIGT > 0 && current.arenaIGT == 0)
+    {
+            return true;
+    }
+
+    if (settings["Broom Trial IGT"] && current.broomRingsCount > old.broomRingsCount)
+    {
+            return true;
+    }
+
 	/*
 	if((settings["" + current.LatestQuest] || vars.Hogsmeade.Contains(current.LatestQuest) && settings["Hogs"]) && !vars.completedSplits.Contains(current.LatestQuest)){
 			vars.completedSplits.Add(current.LatestQuest);
@@ -256,10 +288,34 @@ split
 		}
 		*/
 }
+
+gameTime 
+{
+    if (settings["Arena IGT"] && current.arenaIGT != 0)
+    {
+    return TimeSpan.FromSeconds(current.arenaIGT);
+	}
+
+    if (settings["Broom Trial IGT"])
+    {
+    return TimeSpan.FromSeconds(current.broomIGT);
+	}
+}
 	
 isLoading
 {
 	return current.loading || current.Startup || vars.Menus.Contains(current.Menu);
+
+    //apple told me to do this for the IGT's, dunno the purpose tbh lol
+    if (settings["Arena IGT"])
+    {
+    return true; 
+	}
+	
+    if (settings["Broom Trial IGT"])
+    {
+    return true; 
+	}
 	
 	/*
 	if(settings["Door"]){
