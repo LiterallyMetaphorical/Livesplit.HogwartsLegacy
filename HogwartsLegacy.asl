@@ -7,29 +7,40 @@
 
 state("HogwartsLegacy", "Steam v1.2")
 {
-    bool loading   			: 0x9095DE0;													//1 when loading
-	bool doorload  			: 0x8EA7AB8;													//1 when door is loading
-	bool Startup 			: 0x8A012D0;													//1 during startup, 0 when shaders come up
-	uint Menu 				: 0x8EE9728, 0x140, 0x0;										//Different number depending on Language
-	string250 CurrentQuest	: 0x8E8B8E8, 0x100, 0x0;										//Use settings to check your current tracked quest to find this (ONly the INT_01 part)
-	string38 Event			: 0x8E8B8E0, 0x498, 0x0;										//-8 base address from CurrentQuest (1st offset may move slightly on updates)
-	string250 Checkpoint	: 0x8EB3020, 0x628, 0x1C0, 0x0;									//Tells you what your checkpoint is on the current tracked quest							
-	string250 LatestQuest	: 0x8EB3020, 0xC0, 0x5E0, 0x268, 0x38, 0x0;						//After completing a main quest, Type the ID for it (Do not reload after this)
+	bool loading   		: 0x9095DE0;						//1 when loading
+	bool doorload  		: 0x8EA7AB8;						//1 when door is loading
+	bool Startup 		: 0x8A012D0;						//1 during startup, 0 when shaders come up
+	uint Menu 		: 0x8EE9728, 0x140, 0x0;				//Different number depending on Language
+	string250 CurrentQuest	: 0x8E8B8E8, 0x100, 0x0;				//Use settings to check your current tracked quest to find this (ONly the INT_01 part)
+	string38 Event		: 0x8E8B8E0, 0x498, 0x0;				//-8 base address from CurrentQuest (1st offset may move slightly on updates)
+	string250 Checkpoint	: 0x8EB3020, 0x628, 0x1C0, 0x0;				//Tells you what your checkpoint is on the current tracked quest							
+	string250 LatestQuest	: 0x8EB3020, 0xC0, 0x5E0, 0x268, 0x38, 0x0;		//After completing a main quest, Type the ID for it (Do not reload after this)
 }
 
 state("HogwartsLegacy", "Steam v1.3")
 {
-    bool loading   			: 0x90B52A0;
-	bool doorload  			: 0x8EC6EF8;
-	bool Startup 			: 0x8A202D0;
-	uint Menu				: 0x8F08BA8, 0x140, 0x0;
+   	bool loading   		: 0x90B52A0;
+	bool doorload  		: 0x8EC6EF8;
+	bool Startup 		: 0x8A202D0;
+	uint Menu		: 0x8F08BA8, 0x140, 0x0;
 	string250 CurrentQuest	: 0x8EAAD28, 0x100, 0x0;
-	string38 Event			: 0x8EAAD20, 0x4E8, 0x0;
+	string38 Event		: 0x8EAAD20, 0x4E8, 0x0;
 	string250 Checkpoint	: 0x8ED2470, 0x628, 0x1C0, 0x0;
 	string50 LatestQuest	: 0x8ED2470, 0xC0, 0x5E0, 0x268, 0x38, 0x0;
-    int broomRingsCount     : 0x08ED2470, 0xC0, 0x20, 0x20, 0x488, 0x428, 0x34C;
-    float broomIGT          : 0x08ED2470, 0xC0, 0x20, 0x20, 0x488, 0x428, 0x378;
-    float arenaIGT          : 0x0926EE70, 0x50, 0xA0, 0x40, 0xB8, 0x398, 0x2EC;
+   	int broomRingsCount     : 0x08ED2470, 0xC0, 0x20, 0x20, 0x488, 0x428, 0x34C;
+   	float broomIGT          : 0x08ED2470, 0xC0, 0x20, 0x20, 0x488, 0x428, 0x378;
+   	float arenaIGT          : 0x0926EE70, 0x50, 0xA0, 0x40, 0xB8, 0x398, 0x2EC;
+}
+
+state("HogwartsLegacy", "Steam v1.4")
+{
+    	bool loading   		: 0x91F6120;
+	bool Startup 		: 0x8B5D2F0;
+	uint Menu		: 0x904B338, 0x140, 0x0;
+	string250 CurrentQuest	: 0x8FEBE20, 0x100, 0x0;
+	string38 Event		: 0x8FEBE18, 0x4E8, 0x0;
+	string250 Checkpoint	: 0x9013650, 0x628, 0x1C8, 0x0;
+	string50 LatestQuest	: 0x9013650, 0xC0, 0x5E0, 0x268, 0x38, 0x0;
 }
 
 startup
@@ -188,6 +199,9 @@ init
             break;
 		case 465272832: 
             version = "Steam v1.3";
+            break;
+	   	case 483356672: 
+            version = "Steam v1.4";
             break;
 			default:
         print("Unknown version detected");
