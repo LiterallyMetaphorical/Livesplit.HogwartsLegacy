@@ -43,6 +43,17 @@ state("HogwartsLegacy", "Steam v1.4")
 	string50 LatestQuest	: 0x9013650, 0xC0, 0x5E0, 0x268, 0x38, 0x0;
 }
 
+state("HogwartsLegacy", "Steam v1.5")
+{
+    	bool loading   		: 0x9238320;
+	bool Startup 		: 0x8D723C0;
+	uint Menu		: 0x908D4F8, 0x140, 0x0;
+	string250 CurrentQuest	: 0x902DF60, 0x100, 0x0;
+	string38 Event		: 0x902DF70, 0x4E8, 0x0;
+	string250 Checkpoint	: 0x9055790, 0x628, 0x1C8, 0x0;
+	string50 LatestQuest	: 0x9055790, 0xC0, 0x5E0, 0x268, 0x38, 0x0;
+}
+
 startup
 {
 	Assembly.Load(File.ReadAllBytes("Components/asl-help")).CreateInstance("Basic");
@@ -202,6 +213,9 @@ init
             break;
 	   	case 483356672: 
             version = "Steam v1.4";
+            break;
+		case 471441408: 
+            version = "Steam v1.5";
             break;
 			default:
         print("Unknown version detected");
