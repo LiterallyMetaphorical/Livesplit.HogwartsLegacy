@@ -1,9 +1,23 @@
 // Hogwarts Legacy Load Remover & Autosplitter V1.1.0 (11/03/2023)
 // Supports LRT
-// Splits can be obtained from 
+// Splits can be obtained from
 // Script by TheDementedSalad & Meta
 
 //All Strings are UTF-16
+
+state("HogwartsLegacy", "Steam v1.0") {
+	bool loading: 0x90B2AA0;
+	bool doorload: 0x0;
+	bool Startup: 0x8A1D2D0;
+	uint Menu: 0x8F057C8, 0x140, 0x0;
+	string250 CurrentQuest: 0x8EA7960, 0x100, 0x0;
+	string38 Event: 0x0;
+	string250 Checkpoint: 0x8ECF098, 0x628, 0x1C0, 0x0;
+	string250 LatestQuest: 0x8ECF098, 0xC0, 0x5E0, 0x268, 0x38, 0x0;
+   	int broomRingsCount: 0x0;
+   	float broomIGT: 0x0;
+   	float arenaIGT: 0x0;
+}
 
 state("HogwartsLegacy", "Steam v1.2")
 {
@@ -13,7 +27,7 @@ state("HogwartsLegacy", "Steam v1.2")
 	uint Menu 		: 0x8EE9728, 0x140, 0x0;				//Different number depending on Language
 	string250 CurrentQuest	: 0x8E8B8E8, 0x100, 0x0;				//Use settings to check your current tracked quest to find this (ONly the INT_01 part)
 	string38 Event		: 0x8E8B8E0, 0x498, 0x0;				//-8 base address from CurrentQuest (1st offset may move slightly on updates)
-	string250 Checkpoint	: 0x8EB3020, 0x628, 0x1C0, 0x0;				//Tells you what your checkpoint is on the current tracked quest							
+	string250 Checkpoint	: 0x8EB3020, 0x628, 0x1C0, 0x0;				//Tells you what your checkpoint is on the current tracked quest
 	string250 LatestQuest	: 0x8EB3020, 0xC0, 0x5E0, 0x268, 0x38, 0x0;		//After completing a main quest, Type the ID for it (Do not reload after this)
 }
 
@@ -45,7 +59,7 @@ state("HogwartsLegacy", "Steam v1.4")
 
 state("HogwartsLegacy", "Steam v1.5")
 {
-    	bool loading   		: 0x9238320;
+	bool loading   		: 0x9238320;
 	bool Startup 		: 0x8B9F2F0;
 	uint Menu		: 0x908D4F8, 0x140, 0x0;
 	string250 CurrentQuest	: 0x902DF60, 0x100, 0x0;
@@ -57,13 +71,13 @@ state("HogwartsLegacy", "Steam v1.5")
 startup
 {
 	Assembly.Load(File.ReadAllBytes("Components/asl-help")).CreateInstance("Basic");
-	
+
 	//settings.Add("LRT", false, "Load Remover (Official)");
 	//settings.Add("Door", false, "Load Remover With Door Loads Removed (Test)");
 
-    settings.Add("Arena IGT", false, "Use Arena In-Game Time for primary timer. SELECT ONLY ONE.");
-    settings.Add("Broom Trial IGT", false, "Use Broom Trial In-Game Time for primary timer. SELECT ONLY ONE.");
-	
+	settings.Add("Arena IGT", false, "Use Arena In-Game Time for primary timer. SELECT ONLY ONE.");
+	settings.Add("Broom Trial IGT", false, "Use Broom Trial In-Game Time for primary timer. SELECT ONLY ONE.");
+
 	settings.Add("MQuests", false, "Main Quest Splits");
 	settings.CurrentDefaultParent = "MQuests";
 	settings.Add("INT_01_CP5_Intro_Journal05", false, "Path to Hogwarts");
@@ -109,7 +123,7 @@ startup
 	settings.Add("Repository", false, "The Final Repository +");
 	settings.Add("WEE_01", false, "Weasley's Watchful Eye");
 	settings.CurrentDefaultParent = null;
-	
+
 	settings.Add("AQuests", false, "Assignment Splits");
 	settings.CurrentDefaultParent = "AQuests";
 	settings.Add("ZSI_01_03_ReturnToHecat_Journal", false, "Hecat's Assignment 1 (Incendio)");
@@ -124,7 +138,7 @@ startup
 	settings.Add("ZSB_01", false, "Howin's Assignment (Bombarda)");
 	settings.Add("ZZT_01", false, "Weasley's Assignment (Transformation)");
 	settings.CurrentDefaultParent = null;
-	
+
 	settings.Add("SQuests", false, "Side Quest Splits");
 	settings.CurrentDefaultParent = "SQuests";
 	settings.Add("ZFC_01_DuelingChallange1_QuestActive_StepJournal01", false, "Crossed Wands 1");
@@ -193,35 +207,40 @@ startup
 	settings.CurrentDefaultParent = null;
 }
 
-init 
-{	
+init
+{
 	IntPtr gWorld = vars.Helper.ScanRel(3, "48 8B 05 ???????? 48 3B C? 48 0F 44 C? 48 89 05 ???????? E8");
 	if (gWorld == IntPtr.Zero){
 		vars.Helper.Game = null;
 		return;
 	}
-	
+
 	vars.Menus = new List<uint>()
 	{7209033,7143497,6357060,6619214,2993994324,7209029,2212255528,1437503608,2098194,818622689,2097239,105514561,7274574};
 
 	switch ((int)vars.Helper.GetMemorySize()){
-        case 474820608: 
-            version = "Steam v1.2";
-            break;
-		case 465272832: 
+		case 481329152:
+			version = "Steam v1.0";
+			break;
+		case 474820608:
+			version = "Steam v1.2";
+			break;
+		case 465272832:
             version = "Steam v1.3";
             break;
-	   	case 483356672: 
+	   	case 483356672:
             version = "Steam v1.4";
             break;
-		case 471441408: 
+		case 471441408:
             version = "Steam v1.5";
             break;
-			default:
-        print("Unknown version detected");
-        return false;
+		default:
+        	print("Unknown version detected");
+			print("" + (int)vars.Helper.GetMemorySize());
+			version = "Steam v1.0";
+        	return false;
 	}
-	
+
 	vars.completedSplits = new List<string>();
 }
 
@@ -237,27 +256,36 @@ start
     //return old.quest == "In the Menus" && current.quest == "On Quest: The Path to Hogwarts" || old.quest == "In the Menus" && current.quest == "On Quest: Welcome to Hogwarts";
     if (current.Event == "Intro_AvatarCreator" && old.Event == "RootLevel" || current.CurrentQuest == "WEK_01" && old.CurrentQuest == "None")
     {
-            return true;
+		return true;
     }
 
     // minigames autostart
-     if (settings["Arena IGT"] && old.arenaIGT == 0 && current.arenaIGT > 0)
-    {
-            return true;
-    }
+	if (settings["Arena IGT"] && old.arenaIGT == 0 && current.arenaIGT > 0)
+	{
+		return true;
+	}
 
-     if (settings["Broom Trial IGT"] && old.broomIGT == 1 && current.broomIGT > 1 || old.broomRingsCount != 0 && current.broomRingsCount == 0)
-    {
-            return true;
-    }
+	if (settings["Broom Trial IGT"] && old.broomIGT == 1 && current.broomIGT > 1 || old.broomRingsCount != 0 && current.broomRingsCount == 0)
+	{
+		return true;
+	}
 }
 
 update
 {
-	//DEBUG CODE 
+	//DEBUG CODE
 	//print(modules.First().ModuleMemorySize.ToString());
 	//print(current.loading.ToString());
-	
+	/*
+	if (old.loading != current.loading) print("Loading: " + old.loading + " -> " + current.loading);
+	if (old.doorload != current.doorload) print("Doorload: " + old.doorload + " -> " + current.doorload);
+	if (old.Startup != current.Startup) print("Startup: " + old.Startup + " -> " + current.Startup);
+	if (old.Menu != current.Menu) print("Menu: " + old.Menu + " -> " + current.Menu);
+	if (old.CurrentQuest != current.CurrentQuest) print("CurrentQuest: " + old.CurrentQuest + " -> " + current.CurrentQuest);
+	if (old.Event != current.Event) print("Event: " + old.Event + " -> " + current.Event);
+	if (old.Checkpoint != current.Checkpoint) print("Checkpoint: " + old.Checkpoint + " -> " + current.Checkpoint);
+	if (old.LatestQuest != current.LatestQuest) print("LatestQuest: " + old.LatestQuest + " -> " + current.LatestQuest);*/
+
 	if(timer.CurrentPhase == TimerPhase.NotRunning)
 	{
 		vars.completedSplits.Clear();
@@ -267,24 +295,24 @@ update
 split
 {
 	if(settings["" + old.Checkpoint] && !vars.completedSplits.Contains(old.Checkpoint) && current.Checkpoint != old.Checkpoint){
-			vars.completedSplits.Add(old.Checkpoint);
-			return true;
-		}
-	
+		vars.completedSplits.Add(old.Checkpoint);
+		return true;
+	}
+
 	if(settings["" + current.LatestQuest] && !vars.completedSplits.Contains(current.LatestQuest)){
-			vars.completedSplits.Add(current.LatestQuest);
-			return true;
-		}
+		vars.completedSplits.Add(current.LatestQuest);
+		return true;
+	}
 
     //minigames autosplitting
     if (settings["Arena IGT"] && old.arenaIGT > 0 && current.arenaIGT == 0)
     {
-            return true;
+		return true;
     }
 
     if (settings["Broom Trial IGT"] && current.broomRingsCount > old.broomRingsCount)
     {
-            return true;
+		return true;
     }
 
 	/*
@@ -294,22 +322,22 @@ split
 		}
 		*/
 		/*
-	if((settings["Secrets"] && old.CurrentQuest == "FIG_01" || 
-		settings["Sweets"] && old.CurrentQuest == "COM_07" || 
-		settings["Cache"] && old.CurrentQuest == "COM_03" || 
-		settings["Valour"] && old.CurrentQuest == "COM_01" || 
-		settings["Carted"] && old.CurrentQuest == "COM_14" || 
-		settings["Butterfly"] && old.CurrentQuest == "COM_011" || 
-		settings["Herodiana"] && old.CurrentQuest == "COM_24" || 
-		settings["Friend"] && old.CurrentQuest == "COM_08" || 
+	if((settings["Secrets"] && old.CurrentQuest == "FIG_01" ||
+		settings["Sweets"] && old.CurrentQuest == "COM_07" ||
+		settings["Cache"] && old.CurrentQuest == "COM_03" ||
+		settings["Valour"] && old.CurrentQuest == "COM_01" ||
+		settings["Carted"] && old.CurrentQuest == "COM_14" ||
+		settings["Butterfly"] && old.CurrentQuest == "COM_011" ||
+		settings["Herodiana"] && old.CurrentQuest == "COM_24" ||
+		settings["Friend"] && old.CurrentQuest == "COM_08" ||
 		settings["Control"] && old.CurrentQuest == "COM_16" ||
-		settings["Cabbage"] && old.CurrentQuest == "COM_17" || 
-		settings["Vase"] && old.CurrentQuest == "COM_18" || 
-		settings["Keep"] && old.CurrentQuest == "HST_01" || 
-		settings["Biscuit"] && old.CurrentQuest == "COM_23" || 
-		settings["Spot"] && old.CurrentQuest == "COM_31" || 
-		settings["Time"] && old.CurrentQuest == "EVL_02" || 
-		settings["Bell"] && old.CurrentQuest == "COM_20" || 
+		settings["Cabbage"] && old.CurrentQuest == "COM_17" ||
+		settings["Vase"] && old.CurrentQuest == "COM_18" ||
+		settings["Keep"] && old.CurrentQuest == "HST_01" ||
+		settings["Biscuit"] && old.CurrentQuest == "COM_23" ||
+		settings["Spot"] && old.CurrentQuest == "COM_31" ||
+		settings["Time"] && old.CurrentQuest == "EVL_02" ||
+		settings["Bell"] && old.CurrentQuest == "COM_20" ||
 		settings["Repository"] && old.CurrentQuest == "FGS_01") && !vars.completedSplits.Contains(old.CurrentQuest) && current.CurrentQuest != old.CurrentQuest){
 			vars.completedSplits.Add(old.CurrentQuest);
 			return true;
@@ -317,7 +345,7 @@ split
 		*/
 }
 
-gameTime 
+gameTime
 {
     if (settings["Arena IGT"] && current.arenaIGT != 0)
     {
@@ -329,7 +357,7 @@ gameTime
     return TimeSpan.FromSeconds(current.broomIGT);
 	}
 }
-	
+
 isLoading
 {
 	return current.loading || current.Startup || vars.Menus.Contains(current.Menu);
@@ -337,23 +365,23 @@ isLoading
     //apple told me to do this for the IGT's, dunno the purpose tbh lol
     if (settings["Arena IGT"])
     {
-    return true; 
+    return true;
 	}
-	
+
     if (settings["Broom Trial IGT"])
     {
-    return true; 
+    return true;
 	}
-	
+
 	/*
 	if(settings["Door"]){
 		if(current.loading || current.doorload || !current.Menu || current.Startup){
 			return true;
 		}
-		
+
 		else{
 			return false;
-		
+
 		}
 	}
 	*/
