@@ -7,24 +7,14 @@
 
 state("HogwartsLegacy", "Steam v1.2")
 {
-	bool loading   		: 0x9095DE0;						//1 when loading
-	bool doorload  		: 0x8EA7AB8;						//1 when door is loading
-	bool Startup 		: 0x8A012D0;						//1 during startup, 0 when shaders come up
-	uint Menu 		: 0x8EE9728, 0x140, 0x0;				//Different number depending on Language
 	string250 CurrentQuest	: 0x8E8B8E8, 0x100, 0x0;				//Use settings to check your current tracked quest to find this (ONly the INT_01 part)
-	string38 Event		: 0x8E8B8E0, 0x498, 0x0;				//-8 base address from CurrentQuest (1st offset may move slightly on updates)
 	string250 Checkpoint	: 0x8EB3020, 0x628, 0x1C0, 0x0;				//Tells you what your checkpoint is on the current tracked quest							
 	string250 LatestQuest	: 0x8EB3020, 0xC0, 0x5E0, 0x268, 0x38, 0x0;		//After completing a main quest, Type the ID for it (Do not reload after this)
 }
 
 state("HogwartsLegacy", "Steam v1.3")
 {
-   	bool loading   		: 0x90B52A0;
-	bool doorload  		: 0x8EC6EF8;
-	bool Startup 		: 0x8A202D0;
-	uint Menu		: 0x8F08BA8, 0x140, 0x0;
 	string250 CurrentQuest	: 0x8EAAD28, 0x100, 0x0;
-	string38 Event		: 0x8EAAD20, 0x4E8, 0x0;
 	string250 Checkpoint	: 0x8ED2470, 0x628, 0x1C0, 0x0;
 	string50 LatestQuest	: 0x8ED2470, 0xC0, 0x5E0, 0x268, 0x38, 0x0;
    	int broomRingsCount     : 0x08ED2470, 0xC0, 0x20, 0x20, 0x488, 0x428, 0x34C;
@@ -34,22 +24,14 @@ state("HogwartsLegacy", "Steam v1.3")
 
 state("HogwartsLegacy", "Steam v1.4")
 {
-    	bool loading   		: 0x91F6120;
-	bool Startup 		: 0x8B5D2F0;
-	uint Menu		: 0x904B338, 0x140, 0x0;
 	string250 CurrentQuest	: 0x8FEBE20, 0x100, 0x0;
-	string38 Event		: 0x8FEBE18, 0x4E8, 0x0;
 	string250 Checkpoint	: 0x9013650, 0x628, 0x1C8, 0x0;
 	string50 LatestQuest	: 0x9013650, 0xC0, 0x5E0, 0x268, 0x38, 0x0;
 }
 
 state("HogwartsLegacy", "Steam v1.5")
 {
-    	bool loading   		: 0x9238320;
-	bool Startup 		: 0x8B9F2F0;
-	uint Menu		: 0x908D4F8, 0x140, 0x0;
 	string250 CurrentQuest	: 0x902DF60, 0x100, 0x0;
-	string38 Event		: 0x902DF70, 0x4E8, 0x0;
 	string250 Checkpoint	: 0x9055790, 0x628, 0x1C8, 0x0;
 	string50 LatestQuest	: 0x9055790, 0xC0, 0x5E0, 0x268, 0x38, 0x0;
 }
@@ -195,14 +177,34 @@ startup
 
 init 
 {	
+	IntPtr Engine = vars.Helper.ScanRel(3, "48 89 05 ???????? 48 85 c9 74 ?? e8 ???????? 48 8d 4d");
 	IntPtr gWorld = vars.Helper.ScanRel(3, "48 8B 05 ???????? 48 3B C? 48 0F 44 C? 48 89 05 ???????? E8");
+	IntPtr fNames = vars.Helper.ScanRel(3, "48 8d 05 ???????? eb ?? 48 8d 0d ???????? e8 ???????? c6 05");
+	IntPtr gSyncLoad = vars.Helper.ScanRel(21, "33 C0 0F 57 C0 F2 0F 11 05");
+	
 	if (gWorld == IntPtr.Zero){
 		vars.Helper.Game = null;
 		return;
 	}
 	
-	vars.Menus = new List<uint>()
-	{7209033,7143497,6357060,6619214,2993994324,7209029,2212255528,1437503608,2098194,818622689,2097239,105514561,7274574};
+	vars.Helper["isLoading"] = vars.Helper.Make<bool>(gSyncLoad);
+	
+	vars.Helper["LoadingImage"] = vars.Helper.Make<float>(Engine, 0xE10, 0xF0, 0x68, 0x128, 0x328, 0xC4);
+	vars.Helper["LoadingImage"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+	
+	vars.Helper["ConversationID"] = vars.Helper.MakeString(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2C8, 0x1A88, 0x170, 0x2F0, 0xA8, 0x0);
+	vars.Helper["Checkpoint"] = vars.Helper.MakeString(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2D8, 0x398, 0x498, 0x5E8, 0x678, 0x0);
+	vars.Helper["CurrentQuest"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2D8, 0x398, 0x498, 0x530, 0x2D4);
+	
+	vars.Helper["CurrentQuest2"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2D8, 0x398, 0x498, 0x530, 0x218);
+	
+	vars.Helper["MainMenu"] = vars.Helper.Make<ulong>(Engine, 0x7A0, 0x78, 0x2D8, 0x8, 0xE8, 0x278, 0x18);
+	vars.Helper["MainMenu"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+	
+	vars.Helper["IntroStart"] = vars.Helper.Make<byte>(Engine, 0x7A0, 0x78, 0x2D8, 0x8, 0xE8, 0x278, 0x2D0);
+	
+	vars.Helper["localPlayer"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0x38, 0x0, 0x30, 0x18);
+	vars.Helper["localPlayer"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 
 	switch ((int)vars.Helper.GetMemorySize()){
         case 474820608: 
@@ -211,7 +213,7 @@ init
 		case 465272832: 
             version = "Steam v1.3";
             break;
-	   	case 483356672: 
+		case 483356672: 
             version = "Steam v1.4";
             break;
 		case 471441408: 
@@ -222,6 +224,40 @@ init
         return false;
 	}
 	
+	vars.FNameToString = (Func<ulong, string>)(fName =>
+	{
+		var nameIdx  = (fName & 0x000000000000FFFF) >> 0x00;
+		var chunkIdx = (fName & 0x00000000FFFF0000) >> 0x10;
+		var number   = (fName & 0xFFFFFFFF00000000) >> 0x20;
+
+		IntPtr chunk = vars.Helper.Read<IntPtr>(fNames + 0x10 + (int)chunkIdx * 0x8);
+		IntPtr entry = chunk + (int)nameIdx * sizeof(short);
+
+		int length = vars.Helper.Read<short>(entry) >> 6;
+		string name = vars.Helper.ReadString(length, ReadStringType.UTF8, entry + sizeof(short));
+
+		return number == 0 ? name : name + "_" + number;
+	});
+	
+	vars.FNameToShortString = (Func<ulong, string>)(fName =>
+	{
+		string name = vars.FNameToString(fName);
+
+		int dot = name.LastIndexOf('.');
+		int slash = name.LastIndexOf('/');
+
+		return name.Substring(Math.Max(dot, slash) + 1);
+	});
+	
+	vars.FNameToShortString2 = (Func<ulong, string>)(fName =>
+	{
+		string name = vars.FNameToString(fName);
+
+		int under = name.LastIndexOf('_');
+
+		return name.Substring(0, under + 1);
+	});
+	
 	vars.completedSplits = new List<string>();
 }
 
@@ -229,16 +265,13 @@ onStart
 {
     // This makes sure the timer always starts at 0.00
     timer.IsGameTimePaused = true;
+	vars.completedSplits.Clear();
 }
 
 start
 {
     //New game autostart
-    //return old.quest == "In the Menus" && current.quest == "On Quest: The Path to Hogwarts" || old.quest == "In the Menus" && current.quest == "On Quest: Welcome to Hogwarts";
-    if (current.Event == "Intro_AvatarCreator" && old.Event == "RootLevel" || current.CurrentQuest == "WEK_01" && old.CurrentQuest == "None")
-    {
-            return true;
-    }
+	return current.IntroStart == 255 && old.IntroStart == 0;
 
     // minigames autostart
      if (settings["Arena IGT"] && old.arenaIGT == 0 && current.arenaIGT > 0)
@@ -254,27 +287,33 @@ start
 
 update
 {
+	vars.Helper.Update();
+	vars.Helper.MapPointers();
+	
 	//DEBUG CODE 
 	//print(modules.First().ModuleMemorySize.ToString());
 	//print(current.loading.ToString());
-	
-	if(timer.CurrentPhase == TimerPhase.NotRunning)
-	{
-		vars.completedSplits.Clear();
-	}
 }
 
 split
-{
-	if(settings["" + old.Checkpoint] && !vars.completedSplits.Contains(old.Checkpoint) && current.Checkpoint != old.Checkpoint){
-			vars.completedSplits.Add(old.Checkpoint);
-			return true;
-		}
+{		
+	string setting = "";
 	
-	if(settings["" + current.LatestQuest] && !vars.completedSplits.Contains(current.LatestQuest)){
-			vars.completedSplits.Add(current.LatestQuest);
-			return true;
-		}
+	if(current.Checkpoint != old.Checkpoint){
+		setting = old.Checkpoint;
+	}
+	
+	if(current.LatestQuest != old.LatestQuest){
+		setting = current.LatestQuest;
+	}
+	
+	// Debug. Comment out before release.
+	if (!string.IsNullOrEmpty(setting))
+	vars.Log(setting);
+	
+	if (settings.ContainsKey(setting) && settings[setting] && vars.completedSplits.Add(setting)){
+		return true;
+	}
 
     //minigames autosplitting
     if (settings["Arena IGT"] && old.arenaIGT > 0 && current.arenaIGT == 0)
@@ -332,7 +371,8 @@ gameTime
 	
 isLoading
 {
-	return current.loading || current.Startup || vars.Menus.Contains(current.Menu);
+	return vars.FNameToShortString2(current.localPlayer) != "BP_Phoenix_Player_Controller_C_" || vars.FNameToShortString2(current.MainMenu) == "UI_BP_StartPage_C_" ||
+			vars.FNameToShortString2(current.MainMenu) == "UI_BP_AvatarCreator_C_" || current.LoadingImage == 1f || current.isLoading;
 
     //apple told me to do this for the IGT's, dunno the purpose tbh lol
     if (settings["Arena IGT"])
@@ -344,19 +384,6 @@ isLoading
     {
     return true; 
 	}
-	
-	/*
-	if(settings["Door"]){
-		if(current.loading || current.doorload || !current.Menu || current.Startup){
-			return true;
-		}
-		
-		else{
-			return false;
-		
-		}
-	}
-	*/
 }
 
 exit
