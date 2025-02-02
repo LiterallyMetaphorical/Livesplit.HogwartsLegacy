@@ -181,6 +181,7 @@ init
 	IntPtr gWorld = vars.Helper.ScanRel(3, "48 8B 05 ???????? 48 3B C? 48 0F 44 C? 48 89 05 ???????? E8");
 	IntPtr fNames = vars.Helper.ScanRel(3, "48 8d 05 ???????? eb ?? 48 8d 0d ???????? e8 ???????? c6 05");
 	IntPtr gSyncLoad = vars.Helper.ScanRel(21, "33 C0 0F 57 C0 F2 0F 11 05");
+	IntPtr Loading = vars.Helper.ScanRel(2, "88 0d ?? ?? ?? ?? c3 cc cc cc cc cc cc cc cc cc 48 89 5c 24 ?? 55");
 	
 	if (gWorld == IntPtr.Zero){
 		vars.Helper.Game = null;
@@ -189,8 +190,7 @@ init
 	
 	vars.Helper["isLoading"] = vars.Helper.Make<bool>(gSyncLoad);
 	
-	vars.Helper["LoadingImage"] = vars.Helper.Make<float>(Engine, 0xE10, 0xF0, 0x68, 0x128, 0x328, 0xC4);
-	vars.Helper["LoadingImage"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+	vars.Helper["LoadingImage"] = vars.Helper.Make<bool>(Loading);
 	
 	vars.Helper["ConversationID"] = vars.Helper.MakeString(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2C8, 0x1A88, 0x170, 0x2F0, 0xA8, 0x0);
 	vars.Helper["Checkpoint"] = vars.Helper.MakeString(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2D8, 0x398, 0x498, 0x5E8, 0x678, 0x0);
@@ -372,7 +372,7 @@ gameTime
 isLoading
 {
 	return vars.FNameToShortString2(current.localPlayer) != "BP_Phoenix_Player_Controller_C_" || vars.FNameToShortString2(current.MainMenu) == "UI_BP_StartPage_C_" ||
-			vars.FNameToShortString2(current.MainMenu) == "UI_BP_AvatarCreator_C_" || current.LoadingImage == 1f || current.isLoading;
+			vars.FNameToShortString2(current.MainMenu) == "UI_BP_AvatarCreator_C_" || current.LoadingImage || current.isLoading;
 
     //apple told me to do this for the IGT's, dunno the purpose tbh lol
     if (settings["Arena IGT"])
