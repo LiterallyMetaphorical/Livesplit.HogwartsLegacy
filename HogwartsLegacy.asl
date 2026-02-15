@@ -189,8 +189,10 @@ init
 	}
 	
 	vars.Helper["isLoading"] = vars.Helper.Make<bool>(gSyncLoad);
+	vars.Helper["isLoading"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 	
 	vars.Helper["LoadingImage"] = vars.Helper.Make<bool>(Loading);
+	vars.Helper["LoadingImage"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 	
 	vars.Helper["ConversationID"] = vars.Helper.MakeString(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2C8, 0x1A88, 0x170, 0x2F0, 0xA8, 0x0);
 	vars.Helper["Checkpoint"] = vars.Helper.MakeString(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2D8, 0x398, 0x498, 0x5E8, 0x678, 0x0);
@@ -391,3 +393,4 @@ exit
     //pauses timer if the game crashes
 	timer.IsGameTimePaused = true;
 }
+
