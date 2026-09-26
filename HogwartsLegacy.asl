@@ -343,6 +343,6 @@ isLoading
 
 exit
 {
-    //meow
+    //doesn't pause timer if the game crashes
 	timer.IsGameTimePaused = false;
 }
