@@ -190,11 +190,7 @@ init
 		vars.Helper.Game = null;
 		return;
 	}
-	/* 
-	I fixed something without even changing anything. Wow, man I love programming. Impl to look for player cntr, but ig it's not needed.
-	vars.Helper["localPlayer"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0x38, 0x0, 0x30, 0x18);
-	vars.Helper["localPlayer"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
-	*/
+	
 	vars.hasIntroStart = Engine != IntPtr.Zero;
 	if(vars.hasIntroStart){
 		vars.Helper["IntroStart"] = vars.Helper.Make<byte>(Engine, 0x7A0, 0x78, 0x2D8, 0x8, 0xE8, 0x278, 0x2D0);
