@@ -191,14 +191,8 @@ init
 	vars.Helper["isLoading"] = vars.Helper.Make<bool>(gSyncLoad);
 	vars.Helper["isLoading"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 	
-	vars.Helper["LoadingImage"] = vars.Helper.Make<bool>(Loading);
-	vars.Helper["LoadingImage"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
-	
-	vars.Helper["ConversationID"] = vars.Helper.MakeString(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2C8, 0x1A88, 0x170, 0x2F0, 0xA8, 0x0);
-	vars.Helper["Checkpoint"] = vars.Helper.MakeString(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2D8, 0x398, 0x498, 0x5E8, 0x678, 0x0);
-	vars.Helper["CurrentQuest"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2D8, 0x398, 0x498, 0x530, 0x2D4);
-	
-	vars.Helper["CurrentQuest2"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0x38, 0x0, 0x30, 0x2D8, 0x398, 0x498, 0x530, 0x218);
+	vars.Helper["Loads"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0xF0, 0x50, 0x128, 0x18);
+	vars.Helper["Loads"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 	
 	vars.Helper["MainMenu"] = vars.Helper.Make<ulong>(Engine, 0x7A0, 0x78, 0x2D8, 0x8, 0xE8, 0x278, 0x18);
 	vars.Helper["MainMenu"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
@@ -374,7 +368,7 @@ gameTime
 isLoading
 {
 	return vars.FNameToShortString2(current.localPlayer) != "BP_Phoenix_Player_Controller_C_" || vars.FNameToShortString2(current.MainMenu) == "UI_BP_StartPage_C_" ||
-			vars.FNameToShortString2(current.MainMenu) == "UI_BP_AvatarCreator_C_" || current.LoadingImage || current.isLoading;
+			vars.FNameToShortString2(current.MainMenu) == "UI_BP_AvatarCreator_C_" || vars.FNameToShortString2(current.Loads) == "UI_BP_NewLoadingScreen_C_" || current.isLoading;
 
     //apple told me to do this for the IGT's, dunno the purpose tbh lol
     if (settings["Arena IGT"])
