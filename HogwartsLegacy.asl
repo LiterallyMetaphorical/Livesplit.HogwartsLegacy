@@ -191,9 +191,6 @@ init
 	vars.Helper["isLoading"] = vars.Helper.Make<bool>(gSyncLoad);
 	vars.Helper["isLoading"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 	
-	vars.Helper["Loads"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0xF0, 0x50, 0x128, 0x18);
-	vars.Helper["Loads"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
-	
 	vars.Helper["MainMenu"] = vars.Helper.Make<ulong>(Engine, 0x7A0, 0x78, 0x2D8, 0x8, 0xE8, 0x278, 0x18);
 	vars.Helper["MainMenu"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 	
@@ -201,6 +198,16 @@ init
 	
 	vars.Helper["localPlayer"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0x38, 0x0, 0x30, 0x18);
 	vars.Helper["localPlayer"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+
+	if(version == "Steam v1.2"){
+		vars.Helper["Loads"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0xF0, 0x50, 0x128, 0x18);
+		vars.Helper["Loads"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+	}
+	
+	if(version == "Steam v1.3"){
+		vars.Helper["Loads"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0xF0, 0x68, 0x128, 0x18);
+		vars.Helper["Loads"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+	}
 
 	switch ((int)vars.Helper.GetMemorySize()){
         case 474820608: 
