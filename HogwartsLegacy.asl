@@ -204,7 +204,7 @@ init
 		vars.Helper["Loads"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 	}
 	
-	if(version == "Steam v1.3"){
+	else{
 		vars.Helper["Loads"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0xF0, 0x68, 0x128, 0x18);
 		vars.Helper["Loads"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 	}
