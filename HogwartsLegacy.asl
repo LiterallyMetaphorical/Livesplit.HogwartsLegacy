@@ -199,6 +199,15 @@ init
 	vars.Helper["localPlayer"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0x38, 0x0, 0x30, 0x18);
 	vars.Helper["localPlayer"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
 
+	vars.Helper["Shaders"] = vars.Helper.Make<ulong>(Engine, 0x7A0, 0x78, 0x2D8, 0x8, 0xE8, 0x370, 0x18);
+	vars.Helper["Shaders"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+	
+	vars.Helper["LevelName"] = vars.Helper.Make<ulong>(Engine, 0x7A0, 0x78, 0x2D8, 0x8, 0xE8, 0x18);
+	vars.Helper["LevelName"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+	
+	vars.Helper["LevelNameB"] = vars.Helper.Make<byte>(Engine, 0x7A0, 0x78, 0x2D8, 0x8, 0xE8, 0x18);
+	vars.Helper["LevelNameB"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
+
 	if(version == "Steam v1.2"){
 		vars.Helper["Loads"] = vars.Helper.Make<ulong>(Engine, 0xE10, 0xF0, 0x50, 0x128, 0x18);
 		vars.Helper["Loads"].FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull;
@@ -375,7 +384,8 @@ gameTime
 isLoading
 {
 	return vars.FNameToShortString2(current.localPlayer) != "BP_Phoenix_Player_Controller_C_" || vars.FNameToShortString2(current.MainMenu) == "UI_BP_StartPage_C_" ||
-			vars.FNameToShortString2(current.MainMenu) == "UI_BP_AvatarCreator_C_" || vars.FNameToShortString2(current.Loads) == "UI_BP_NewLoadingScreen_C_" || current.isLoading;
+			vars.FNameToShortString2(current.MainMenu) == "UI_BP_AvatarCreator_C_" || vars.FNameToShortString2(current.Loads) == "UI_BP_NewLoadingScreen_C_" || 
+			vars.FNameToShortString2(current.Shaders) == "UI_BP_PSO_FS_C_" || vars.FNameToShortString2(current.LevelName) == "Frontend_C_" || current.LevelNameB == 0 || current.isLoading;
 
     //apple told me to do this for the IGT's, dunno the purpose tbh lol
     if (settings["Arena IGT"])
